@@ -1,31 +1,81 @@
 <template>
   <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
     <router-view/>
   </div>
 </template>
 
-<style>
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
-#nav {
-  padding: 30px;
-}
+<style lang="scss">
+  @import '../src/assets/css/style.scss';
+  #app {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    background-color: $bgColor;
 
-#nav a {
-  font-weight: bold;
-  color: #2c3e50;
-}
+    // push页面时：新页面的进入动画
+    .fold-left-enter-active {
+      animation-name: fold-left-in;
+      animation-duration: .4s;
+    }
+    // push页面时：老页面的退出动画
+    .fold-left-leave-active {
+      animation-name: fold-left-out;
+      animation-duration: .4s;
+    }
+    // push页面时：新页面的进入动画
+    @keyframes fold-left-in {
+      0% {
+        transform: translate(100%, 0);
+        /* visibility: visible; */
+      }
+      100% {
+        transform: translate(0, 0);
+      }
+    }
+    // push页面时：老页面的退出动画
+    @keyframes fold-left-out {
+      0% {
+        transform: translate(0, 0);
+      }
+      100% {
+        transform: translate(-100%, 0);
+        /* visibility: hidden; */
+      }
+    }
 
-#nav a.router-link-exact-active {
-  color: #42b983;
-}
+    // 后退页面时：即将展示的页面动画
+    .fold-right-enter-active {
+      animation-name: fold-right-in;
+      animation-duration: .4s;
+    }
+    // 后退页面时：后退的页面执行的动画
+    .fold-right-leave-active {
+      animation-name: fold-right-out;
+      animation-duration: .4s;
+    }
+    // 后退页面时：即将展示的页面动画
+    @keyframes fold-right-in{
+      0% {
+        width: 100%;
+        transform: translate(-100%, 0);
+        /* visibility: visible; */
+      }
+      100% {
+        width: 100%;
+        transform: translate(0, 0);
+      }
+    }
+    // 后退页面时：后退的页面执行的动画
+    @keyframes fold-right-out  {
+      0% {
+        width: 100%;
+        transform: translate(0, 0);
+      }
+      100% {
+        width: 100%;
+        transform: translate(100%, 0);
+        /* visibility: hidden; */
+      }
+    }
+  }
 </style>
