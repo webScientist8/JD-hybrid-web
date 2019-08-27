@@ -3,8 +3,10 @@
       <div class="goods-item goods-waterfall-item" ref="goodsItem" v-for="(item, index) in dataSource" :key="index" :style="goodsItemStyles[index]">
         <img class="goods-item-img" :src="item.img" alt="" :style="imgStyles[index]">
         <div class="goods-item-desc">
-          <p class="goods-item-desc-name">
-            <span class="text-line-2">{{item.name}}</span>
+          <p class="goods-item-desc-name text-line-2" :class="{'goods-item-desc-name-hint' : !item.isHave}">
+            <dirct v-if="item.isDirect"></dirct>
+            <no-have v-if="!item.isHave"></no-have>
+            {{item.name}}
           </p>
           <div class="goods-item-desc-data">
             <p class="goods-item-desc-data-price">￥{{item.price | priceValue}}</p>
@@ -16,8 +18,14 @@
 </template>
 
 <script>
+import Dirct from '@c/goods/Direct'
+import NoHave from '@c/goods/NoHave'
 export default {
   name: 'Goods',
+  components: {
+    Dirct,
+    NoHave
+  },
   data: function () {
     return {
       dataSource: [],

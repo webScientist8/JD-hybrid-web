@@ -1,5 +1,20 @@
 <template>
-    <div class="home">
+    <div class="home" @scroll="onScrollChange">
+      <navgation-bar :isShowBack="false" :navBarStyle="navBarStyle">
+        <template v-slot:nav-left>
+          <img :src="navBarCurrentSlotStyle.leftIcon">
+        </template>
+        <template v-slot:nav-center>
+          <search
+            :bgColor="navBarCurrentSlotStyle.search.bgColor"
+            :hintColor="navBarCurrentSlotStyle.search.hintColor"
+            :icon="navBarCurrentSlotStyle.search.icon">
+          </search>
+        </template>
+        <template v-slot:nav-right>
+          <img :src="navBarCurrentSlotStyle.rightIcon">
+        </template>
+      </navgation-bar>
       <div class="home-content">
         <my-swiper :swiperImgs="swiperData.map(item => item.icon)" :height="swiperHeight"></my-swiper>
         <activity>
@@ -25,24 +40,56 @@ import Activity from '@c/currency/Activity'
 import ModeOptions from '@c/currency/ModeOptions'
 import Seconds from '@c/seconds/Seconds'
 import Goods from '@c/goods/Goods'
+import NavgationBar from '@c/currency/NavigationBar'
+import Search from '@c/currency/Search'
 export default {
   name: 'home',
   components: {
+    NavgationBar,
     MySwiper,
     Activity,
     ModeOptions,
     Seconds,
-    Goods
+    Goods,
+    Search
   },
   data: function () {
     return {
       swiperData: [],
       swiperHeight: '184px',
       activityDatas: [],
-      secondsDatas: []
+      secondsDatas: [],
+      navBarSlotStyle: {
+        normal: {
+          leftIcon: require('@img/more-white.svg'),
+          search: {
+            bgColor: '#fff',
+            hintColor: '#999',
+            icon: require('@img/search.svg')
+          },
+          rightIcon: require('@img/message-white.svg')
+        },
+        highlight: {
+          leftIcon: require('@img/more.svg'),
+          search: {
+            bgColor: '#d7d7d7',
+            hintColor: '#fff',
+            icon: require('@img/search-white.svg')
+          },
+          rightIcon: require('@img/message.svg')
+        }
+      },
+      navBarCurrentSlotStyle: {},
+      navBarStyle: {
+        position: 'fixed',
+        backgroundColor: ''
+      },
+      scrollTopValue: -1,
+      ANCHOR_SCROLL_TOP: 160
     }
   },
   created: function () {
+    this.navBarCurrentSlotStyle = this.navBarSlotStyle.normal
     this.initData()
   },
   methods: {
@@ -56,6 +103,17 @@ export default {
         this.activityDatas = activityDatas.list
         this.secondsDatas = secondsDatas.list
       }))
+    },
+    onScrollChange: function ($event) {
+      this.scrollTopValue = $event.target.scrollTop
+
+      let opacity = this.scrollTopValue / this.ANCHOR_SCROLL_TOP
+      if (opacity >= 1) {
+        this.navBarCurrentSlotStyle = this.navBarSlotStyle.highlight
+      } else {
+        this.navBarCurrentSlotStyle = this.navBarSlotStyle.normal
+      }
+      this.navBarStyle.backgroundColor = 'rgba(255, 255, 255, ' + opacity + ')'
     }
   }
 }

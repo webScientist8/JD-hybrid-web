@@ -1,10 +1,17 @@
 <template>
-    <div class="shopping">2</div>
+    <div class="shopping">
+      <navigation-bar :pageName="'购物车'" :isShowBack="false"></navigation-bar>
+    </div>
 </template>
 
 <script>
+import NavigationBar from '@c/currency/NavigationBar'
 export default {
-  name: 'shopping'
+  name: 'shopping',
+  components: {
+    NavigationBar
+  }
+
 }
 </script>
 
