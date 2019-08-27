@@ -2,7 +2,7 @@
     <div class="nav-bar z-index-max"
          :style="navBarStyle"
          :class="{'bottom-line': pageName}"
-    ><div class="left">
+    ><div class="left" @click="$emit('onLeftClick')">
         <img v-if="isShowBack" src="@img/back.svg" alt="">
         <slot name="nav-left"></slot>
       </div>
