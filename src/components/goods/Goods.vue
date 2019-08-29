@@ -1,6 +1,13 @@
 <template>
-    <div class="goods goods-waterfall" :style="{height: goodsViewHeight}">
-      <div class="goods-item goods-waterfall-item" ref="goodsItem" v-for="(item, index) in dataSource" :key="index" :style="goodsItemStyles[index]">
+    <div class="goods"
+         :class="[layoutClass, {'goods-scroll' : isScroll}]"
+         :style="{height: goodsViewHeight}"
+    >
+      <div class="goods-item"
+           :class="layoutItemClass"
+           ref="goodsItem" v-for="(item, index) in sortGoodsData"
+           :key="index"
+           :style="goodsItemStyles[index]">
         <img class="goods-item-img" :src="item.img" alt="" :style="imgStyles[index]">
         <div class="goods-item-desc">
           <p class="goods-item-desc-name text-line-2" :class="{'goods-item-desc-name-hint' : !item.isHave}">
@@ -26,15 +33,33 @@ export default {
     Dirct,
     NoHave
   },
+  props: {
+    sort: {
+      type: String,
+      default: '1'
+    },
+    layoutType: {
+      type: String,
+      default: '1'
+    },
+    isScroll: {
+      type: Boolean,
+      default: true
+    }
+  },
   data: function () {
     return {
       dataSource: [],
       MIN_IMG_HEIGHT: 178,
       MAX_IMG_HEIGHT: 230,
       imgStyles: [],
+      // 1
+      sortGoodsData: [],
       ITEM_MARGIN_SIZE: 8,
       goodsItemStyles: [],
-      goodsViewHeight: 0
+      goodsViewHeight: '100%',
+      layoutClass: 'goods-list',
+      layoutItemClass: 'goods-list-item'
     }
   },
   created: function () {
@@ -45,11 +70,73 @@ export default {
       this.$http.get('/goods')
         .then(data => {
           this.dataSource = data.list
+          // 设置布局
+          this.initLayout()
+          this.setSortGoodsData()
+        })
+    },
+    setSortGoodsData: function () {
+      switch (this.sort) {
+        case '1':
+          this.sortGoodsData = this.dataSource.slice(0)
+          break
+        case '1-2':
+          this.getSortGoodsDataFromKey('price')
+          break
+        case '1-3':
+          this.getSortGoodsDataFromKey('volume')
+          break
+        case '2':
+          this.getSortGoodsDataFromKey('isHave')
+          break
+        case '3':
+          this.getSortGoodsDataFromKey('isDirect')
+          break
+      }
+    },
+    getSortGoodsDataFromKey: function (key) {
+      this.sortGoodsData.sort((goods1, goods2) => {
+        let v1 = goods1[key]
+        let v2 = goods2[key]
+        if (typeof v1 === 'boolean') {
+          if (v1) {
+            return -1
+          }
+          if (v2) {
+            return 1
+          }
+          return 0
+        }
+        if (parseFloat(v1) >= parseFloat(v2)) {
+          return -1
+        }
+        return 1
+      })
+    },
+    initLayout: function () {
+      // 数据初始化
+      this.goodsViewHeight = '100%'
+      this.goodsItemStyles = []
+      this.imgStyles = []
+      // 监听
+      switch (this.layoutType) {
+        case '1':
+          this.layoutClass = 'goods-list'
+          this.layoutItemClass = 'goods-list-item'
+          break
+        case '2':
+          this.layoutClass = 'goods-grid'
+          this.layoutItemClass = 'goods-grid-item'
+          break
+        case '3':
+          this.layoutClass = 'goods-waterfall'
+          this.layoutItemClass = 'goods-waterfall-item'
           this.initImgStyles()
           this.$nextTick(() => {
             this.initWaterfall()
           })
-        })
+          break
+      }
     },
     imgHeight: function () {
       let result = Math.floor(Math.random() * (this.MAX_IMG_HEIGHT - this.MIN_IMG_HEIGHT) + this.MIN_IMG_HEIGHT)
@@ -87,7 +174,17 @@ export default {
         }
         this.goodsItemStyles.push(goodsItemStyle)
       })
-      this.goodsViewHeight = (leftHeightTotal > rightHeightTotal ? leftHeightTotal : rightHeightTotal) + 'px'
+      if (!this.isScroll) {
+        this.goodsViewHeight = leftHeightTotal > rightHeightTotal ? leftHeightTotal : rightHeightTotal + 'px'
+      }
+    }
+  },
+  watch: {
+    sort: function () {
+      this.setSortGoodsData()
+    },
+    layoutType: function () {
+      this.initLayout()
     }
   }
 }
@@ -97,10 +194,10 @@ export default {
   @import '../../assets/css/style.scss';
   .goods {
     background-color: $bgColor;
-    &-scroll {
-      overflow: hidden;
-      overflow-y: auto;
-    }
+      &-scroll {
+        overflow: hidden;
+        overflow-y: auto;
+      }
     &-item {
       background-color: white;
       padding: $marginSize;

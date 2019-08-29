@@ -1,12 +1,18 @@
 <template>
   <div class="goods-options  z-index-2">
     <ul class="goods-options-list">
-      <li class="goods-options-item" v-for="(item, index) in optionsDatas" :key="index">
-        <a class="goods-options-item-content" @click="onOptionsItemClick(item, index)">
+      <li class="goods-options-item"
+          v-for="(item, index) in optionsDatas"
+          :key="index">
+        <a class="goods-options-item-content"
+           @click="onOptionsItemClick(item, index)">
           <span class="goods-options-item-content-name"
                 :class="{'goods-options-item-content-name-active' : selectOption.id === item.id}"
           >{{item.name}}</span>
-          <span class="goods-options-item-content-caret caret" v-if="item.subs.length > 0"></span>
+          <span class="goods-options-item-content-caret caret"
+                v-if="item.subs.length > 0"
+                :class="[isShowSubContent && selectOption.id === item.id ? 'goods-options-item-content-caret-open' : 'goods-options-item-content-caret-close']">
+          </span>
         </a>
       </li>
     </ul>
@@ -31,7 +37,7 @@
       </div>
     </transition>
 
-    <div class="cover"></div>
+    <div class="cover" v-show="isShowSubContent" @click="isShowSubContent = false"></div>
   </div>
 </template>
 
@@ -66,7 +72,7 @@ export default {
         },
         {
           id: '3',
-          name: '直营有限',
+          name: '直营优先',
           subs: []
         }
       ],
@@ -99,6 +105,11 @@ export default {
         })
       })
       this.isShowSubContent = false
+    }
+  },
+  watch: {
+    selectOption: function (newV) {
+      this.$emit('optionsChange', newV.id)
     }
   }
 }
@@ -185,12 +196,8 @@ export default {
         }
       }
     }
-    /**
-        子选项内容区展开动画，当 v-if=“true” 的时候调用
-        当子选项部分展开时，初始状态max-height为0，结束状态max-height为180
-    */
     .fold-height-enter-active {
-      animation-duration: .3s;
+      animation-duration: 3s;
       animation-name: fold-height-open;
     }
 
@@ -202,16 +209,10 @@ export default {
         max-height: px2rem(180);
       }
     }
-
-    /**
-        子选项内容区关闭动画，当 v-if=false 的时候调用
-        当子选项部分关闭时，初始状态max-height为180，结束状态max-height为0
-    */
     .fold-height-leave-active {
-      animation-duration: .3s;
+      animation-duration: 3s;
       animation-name: fold-height-close;
     }
-
     @keyframes fold-height-close {
       0% {
         max-height: px2rem(180);
