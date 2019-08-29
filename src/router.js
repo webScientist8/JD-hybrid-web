@@ -17,6 +17,12 @@ export default new Router({
       path: '/goodsList',
       name: 'goodsList',
       component: () => import(/* webpackChunkName: "goodsList" */ './views/GoodsList.vue')
+    },
+    // 注册商品详情页
+    {
+      path: '/goodsDetail',
+      name: 'goodsDetail',
+      component: () => import('./views/GoodsDetail.vue')
     }
   ]
 })

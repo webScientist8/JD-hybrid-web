@@ -29,7 +29,7 @@
             <img src="../assets/img/pinGouJie.jpg" alt="">
           </div>
         </activity>
-        <goods :layoutType="3" :isScroll="false"></goods>
+        <goods :layoutType="'3'" :isScroll="false"></goods>
       </div>
     </div>
 </template>

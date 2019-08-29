@@ -1,16 +1,21 @@
 <template>
     <div class="goods"
          :class="[layoutClass, {'goods-scroll' : isScroll}]"
-         :style="{height: goodsViewHeight}"
-    >
+         :style="{height: goodsViewHeight}">
       <div class="goods-item"
            :class="layoutItemClass"
-           ref="goodsItem" v-for="(item, index) in sortGoodsData"
+           ref="goodsItem"
+           v-for="(item, index) in sortGoodsData"
            :key="index"
-           :style="goodsItemStyles[index]">
-        <img class="goods-item-img" :src="item.img" alt="" :style="imgStyles[index]">
+           :style="goodsItemStyles[index]"
+           @click="onItemClick(item)"
+      >
+        <img class="goods-item-img"
+             :src="item.img" alt=""
+             :style="imgStyles[index]">
         <div class="goods-item-desc">
-          <p class="goods-item-desc-name text-line-2" :class="{'goods-item-desc-name-hint' : !item.isHave}">
+          <p class="goods-item-desc-name text-line-2"
+             :class="{'goods-item-desc-name-hint' : !item.isHave}">
             <dirct v-if="item.isDirect"></dirct>
             <no-have v-if="!item.isHave"></no-have>
             {{item.name}}
@@ -177,6 +182,21 @@ export default {
       if (!this.isScroll) {
         this.goodsViewHeight = leftHeightTotal > rightHeightTotal ? leftHeightTotal : rightHeightTotal + 'px'
       }
+    },
+    // 点击跳转到详情页
+    onItemClick: function (item) {
+      // 判断无商品不跳转 提示该商品暂无库存
+      if (!item.isHave) {
+        alert('该商品暂无库存')
+        return
+      }
+      this.$router.push({
+        name: 'goodsDetail',
+        params: {
+          // routerType: 'push'
+          goods: item
+        }
+      })
     }
   },
   watch: {
