@@ -1,7 +1,10 @@
 <template>
     <div class="goods"
          :class="[layoutClass, {'goods-scroll' : isScroll}]"
-         :style="{height: goodsViewHeight}">
+         :style="{height: goodsViewHeight}"
+         ref="goods"
+         @scroll="onScrollChange"
+    >
       <div class="goods-item"
            :class="layoutItemClass"
            ref="goodsItem"
@@ -64,11 +67,15 @@ export default {
       goodsItemStyles: [],
       goodsViewHeight: '100%',
       layoutClass: 'goods-list',
-      layoutItemClass: 'goods-list-item'
+      layoutItemClass: 'goods-list-item',
+      scrollTopValue: 0
     }
   },
   created: function () {
     this.initData()
+  },
+  activated: function () {
+    this.$refs.goods.scrollTop = this.scrollTopValue
   },
   methods: {
     initData: function () {
@@ -193,10 +200,13 @@ export default {
       this.$router.push({
         name: 'goodsDetail',
         params: {
-          // routerType: 'push'
+          routerType: 'push',
           goods: item
         }
       })
+    },
+    onScrollChange: function ($event) {
+      this.scrollTopValue = $event.target.scrollTop
     }
   },
   watch: {

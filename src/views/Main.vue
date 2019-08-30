@@ -9,7 +9,7 @@
 
 import ToolBar from '@c/currency/ToolBar'
 export default {
-  name: 'Main',
+  name: 'imooc',
   components: {
     'tool-bar': ToolBar,
     'home': () => import('@c/Home'),

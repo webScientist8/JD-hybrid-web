@@ -1,5 +1,5 @@
 <template>
-    <div class="home" @scroll="onScrollChange">
+    <div class="home" @scroll="onScrollChange" ref="home">
       <navgation-bar :isShowBack="false" :navBarStyle="navBarStyle">
         <template v-slot:nav-left>
           <img :src="navBarCurrentSlotStyle.leftIcon">
@@ -91,6 +91,9 @@ export default {
   created: function () {
     this.navBarCurrentSlotStyle = this.navBarSlotStyle.normal
     this.initData()
+  },
+  activated: function () {
+    this.$refs.home.scrollTop = this.scrollTopValue
   },
   methods: {
     initData: function () {

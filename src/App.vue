@@ -1,8 +1,46 @@
 <template>
   <div id="app">
-    <router-view/>
+    <transition :name="transitionName">
+      <keep-alive :include="keepAliveNames">
+        <router-view/>
+      </keep-alive>
+    </transition>
   </div>
 </template>
+
+<script>
+export default {
+  name: 'App',
+  data: function () {
+    return {
+      transitionName: 'fold-left',
+      keepAliveNames: [
+        'imooc'
+      ]
+    }
+  },
+  created: function () {
+    window.nativeFunctionUserLogin = this.nativeFunctionUserLogin
+  },
+  watch: {
+    '$route' (to, from) {
+      const routerType = to.params.routerType
+      if (routerType === 'push') {
+        this.keepAliveNames.push(to.name)
+        this.transitionName = 'fold-left'
+      } else {
+        this.keepAliveNames.pop()
+        this.transitionName = 'fold-right'
+      }
+    }
+  },
+  methods: {
+    nativeFunctionUserLogin: function (username) {
+      this.$store.commit('setUsername', username)
+    }
+  }
+}
+</script>
 
 <style lang="scss">
   @import '../src/assets/css/style.scss';

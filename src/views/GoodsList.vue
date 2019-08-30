@@ -79,12 +79,12 @@ export default {
 <style lang="scss" scoped>
   @import '../assets/css/style.scss';
   .goods-list-page {
+    position: absolute;
     height: 100%;
     width: 100%;
     background-color: $bgColor;
     display: flex;
     flex-direction: column;
-    position: absolute;
     &-content {
       height: 100%;
       display: flex;
