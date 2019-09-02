@@ -1,7 +1,9 @@
 <template>
   <div class="main">
+    <keep-alive>
     <component :is="currentComponent"></component>
-    <tool-bar @onChangeFragment="onChangeFragment"></tool-bar>
+    </keep-alive>
+    <tool-bar ref="toolBar" @onChangeFragment="onChangeFragment"></tool-bar>
   </div>
 </template>
 
@@ -21,10 +23,17 @@ export default {
       currentComponent: 'home'
     }
   },
+  activated: function () {
+    this.pushFragment()
+  },
   methods: {
     onChangeFragment: function (componentName) {
-      console.log(componentName)
       this.currentComponent = componentName
+    },
+    pushFragment: function () {
+      let componentIndex = this.$route.params.componentIndex
+      if (componentIndex === undefined) return
+      this.$refs.toolBar.pushFragment(componentIndex)
     }
   }
 }

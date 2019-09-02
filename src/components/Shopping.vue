@@ -1,6 +1,7 @@
 <template>
     <div class="shopping">
       <navigation-bar :pageName="'购物车'" :isShowBack="false"></navigation-bar>
+      <h1>11111111111</h1>
     </div>
 </template>
 
@@ -10,6 +11,11 @@ export default {
   name: 'shopping',
   components: {
     NavigationBar
+  },
+  data: function () {
+    return {
+      shoppingDatas: this.$store.state.shoppingDatas
+    }
   }
 
 }

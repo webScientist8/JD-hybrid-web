@@ -32,6 +32,9 @@ export default {
         this.keepAliveNames.pop()
         this.transitionName = 'fold-right'
       }
+      if (to.params.clearTask) {
+        this.keepAliveNames = ['imooc']
+      }
     }
   },
   methods: {

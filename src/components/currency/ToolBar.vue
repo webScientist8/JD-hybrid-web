@@ -1,8 +1,13 @@
 <template>
   <div class="tool-bar">
-    <div class="tool-bar-item" @click="onItemClick(item, index)" v-for="(item, index) in toolBarData" :key="index">
-      <img class="tool-bar-item-img" :src="[index === selectIndex ? item.hIcon : item.nIcon]">
-      <p class="tool-bar-item-name" :class="{'tool-bar-item-name-h' : index === selectIndex}">{{item.name}}</p>
+    <div class="tool-bar-item"
+         @click="onChangeFragment(item, index)"
+         v-for="(item, index) in toolBarData"
+         :key="index">
+      <img class="tool-bar-item-img"
+           :src="[index === selectIndex ? item.hIcon : item.nIcon]">
+      <p class="tool-bar-item-name"
+         :class="{'tool-bar-item-name-h' : index === selectIndex}">{{item.name}}</p>
     </div>
   </div>
 </template>
@@ -38,13 +43,13 @@ export default {
     }
   },
   methods: {
-    onItemClick: function (item, index) {
+    onChangeFragment: function (item, index) {
       this.selectIndex = index
       this.$emit('onChangeFragment', item.componentName)
+    },
+    pushFragment: function (index) {
+      this.onChangeFragment(this.toolBarData[index], index)
     }
-    // onChangeComponent: function (index) {
-    //   this.onItemClick(this.toolBarData[index], index)
-    // }
   }
 }
 </script>

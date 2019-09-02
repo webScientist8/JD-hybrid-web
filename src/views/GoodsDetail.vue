@@ -68,10 +68,10 @@
       </parallax>
     </div>
     <div class="goods-detail-buy">
-      <div class="goods-detail-buy-add">
+      <div class="goods-detail-buy-add" @click="onAddGoodsClick">
         加入购物车
       </div>
-      <div class="goods-detail-buy-now" >
+      <div class="goods-detail-buy-now" @click="onBuyClick()">
         立即购买
       </div>
     </div>
@@ -112,6 +112,38 @@ export default {
     },
     onScrollChange: function (scrollValue) {
       this.scrollValue = scrollValue
+    },
+    loadGoodsData: function () {
+      this.$http.get('/goodsDetail', {
+        params: {
+          goodsId: this.$route.query.goodsId
+        }
+      }).then(data => {
+        this.goodsData = data.goodsData
+      })
+    },
+    onBuyClick: function () {
+      this.$router.push({
+        name: 'buy',
+        params: {
+          routerType: 'push'
+        },
+        query: {
+          goodsId: this.goodsData.id
+        }
+      })
+    },
+    onAddGoodsClick: function () {
+      this.$store.commit('addShoppingData', this.goodsData)
+      alert('添加成功')
+      this.$router.push({
+        name: 'Main',
+        params: {
+          routerType: 'push',
+          componentIndex: 1,
+          clearTask: true
+        }
+      })
     }
   },
   // 获取数据Goods.vue -- goods: item
