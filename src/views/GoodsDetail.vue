@@ -83,7 +83,6 @@ import NavgationBar from '@c/currency/NavigationBar'
 import MySwiper from '@c/swiper/MySwiper'
 import direct from '@c/goods/Direct'
 import Parallax from '@c/parallax/Parallax'
-// import Parallax from '@c/parallax/Parallax'
 export default {
   name: 'GoodsDetail',
   components: {
