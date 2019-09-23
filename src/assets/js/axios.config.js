@@ -2,7 +2,18 @@ import Vue from 'vue'
 import axios from 'axios'
 
 // 设置 axios 请求的 baseUrl
-axios.defaults.baseURL = 'https://easy-mock.com/mock/5ceb51b551e3de74af53fe54/imooc/api/'
+axios.defaults.baseURL = 'http://api.imooc.hybrid.lgdsunday.club/'
+
+axios.interceptors.request.use(config => {
+  if (config.params) {
+    config.params.token = 'b749e550-dda0-11e9-81f5-fde7740e4c8e'
+  } else {
+    config.params = {
+      token: 'b749e550-dda0-11e9-81f5-fde7740e4c8e'
+    }
+  }
+  return config
+})
 
 /**
  * 设置拦截器，interceptors 的 响应处理，
