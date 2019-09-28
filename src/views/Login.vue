@@ -24,7 +24,7 @@
 
 <script>
 import NavgationBar from '@c/currency/NavigationBar'
-import md5 from '@js/md5.min.js'
+import md5 from '../assets/js/md5.min.js'
 export default {
   components: {
     NavgationBar
@@ -45,7 +45,6 @@ export default {
         alert('用户名或密码未输入')
         return
       }
-
       this.md5Password = md5(this.password)
       if (window.androidJSBridge) {
         this.onLoginToAndroid()
@@ -62,20 +61,20 @@ export default {
       })
     },
     onLoginToAndroid: function () {
-      let user = {
+      let userJson = JSON.stringify({
         'username': this.username,
         'password': this.md5Password
-      }
-      let result = window.androidJSBridge.login(JSON.stringify(user))
+      })
+      let result = window.androidJSBridge.login(userJson)
       this.onLoginCallback(result)
     },
     onLoginToIos: function () {
-      let user = {
+      let userObj = {
         'username': this.username,
         'password': this.md5Password
       }
       window.loginCallback = this.onLoginCallback
-      window.webkit.messageHandlers.login.postMessage(user)
+      window.webkit.messageHandlers.login.postMessage(userObj)
     },
     onLoginCallback: function (result) {
       switch (result) {
@@ -87,10 +86,10 @@ export default {
           this.onBackClick()
           break
         case '1':
-          alert('用户不存在')
+          alert('登录用户不存在')
           break
         case '2':
-          alert('密码错误')
+          alert('用户密码错误')
           break
       }
     }

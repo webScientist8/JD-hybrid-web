@@ -36,7 +36,7 @@
       </ul>
     </div>
 
-    <div class="pay page-commit">
+    <div class="pay page-commit" @click="onPayClick">
       立即购买
     </div>
   </div>
@@ -92,6 +92,28 @@ export default {
     },
     getCheckIcon: function (isCheck) {
       return isCheck ? require('@img/check.svg') : require('@img/no-check.svg')
+    },
+    onPayClick: function () {
+      // 支付宝支付
+      if (this.selectPayment.id === '1') {
+        this.aliPay()
+      } else if (this.selectPayment.id === '2') {
+        this.wxPay()
+      }
+    },
+    aliPay: function () {
+      if (window.androidJSBridge) {
+        window.androidJSBridge.aliPay(JSON.stringify(this.goodsData))
+      } else if (window.webkit) {
+
+      }
+    },
+    wxPay: function () {
+      if (window.androidJSBridge) {
+        window.androidJSBridge.wxPay(JSON.stringify(this.goodsData))
+      } else if (window.webkit) {
+
+      }
     }
   }
 }

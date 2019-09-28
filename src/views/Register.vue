@@ -26,9 +26,10 @@
 </template>
 
 <script>
+import md5 from '../assets/js/md5.min.js'
 import NavgationBar from '@c/currency/NavigationBar'
+
 export default {
-  name: 'Register',
   components: {
     NavgationBar
   },
@@ -41,17 +42,56 @@ export default {
     }
   },
   methods: {
+    /**
+     * 后退事件
+     */
     onBackClick: function () {
       this.$router.go(-1)
     },
+    /**
+     * 注册按钮点击事件
+     */
     onRegisterClick: function () {
       if (this.username.length === 0) {
         alert('请完善用户名')
         return
       }
-      if (this.password.length === 0 || this.password != this.comfirmPassword) {
+      if (this.password.length === 0 || this.password !== this.comfirmPassword) {
         alert('请完善密码')
         return
+      }
+      this.md5Password = md5(this.password)
+      if (window.androidJSBridge) {
+        this.onRegisterToAndroid()
+      } else if (window.webkit) {
+        this.onRegisterToIos()
+      }
+    },
+    onRegisterToAndroid: function () {
+      let userJson = JSON.stringify({
+        'username': this.username,
+        'password': this.md5Password
+      })
+      let result = window.androidJSBridge.register(userJson)
+      this.onRegisterCallback(result)
+    },
+    onRegisterToIos: function () {
+      let userObj = {
+        'username': this.username,
+        'password': this.md5Password
+      }
+      window.registerCallback = this.onRegisterCallback
+      window.webkit.messageHandlers.register.postMessage(userObj)
+    },
+    /**
+     * 注册方法回调
+     */
+    onRegisterCallback: function (result) {
+      if (result) {
+        alert('注册成功')
+        this.onBackClick()
+      } else {
+        alert('注册失败，请重试')
       }
     }
   }
@@ -60,17 +100,21 @@ export default {
 
 <style lang="scss" scoped>
   @import '../assets/css/style.scss';
+
   .register-page {
     position: absolute;
     height: 100%;
     width: 100%;
     background-color: white;
+
     &-content {
       width: 100%;
       height: 100%;
+
       &-login {
         margin-top: 40%;
       }
+
       &-register {
         font-size: $infoSize;
         color: $textHintColor;

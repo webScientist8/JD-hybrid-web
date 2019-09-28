@@ -63,6 +63,29 @@ export default {
           routerType: 'push'
         }
       })
+    },
+    onLogoutClick: function () {
+      if (window.androidJSBridge) {
+        this.onLogoutToAndroid()
+      } else if (window.webkit) {
+        this.onLogoutToIos()
+      }
+    },
+    onLogoutToAndroid: function () {
+      let result = window.androidJSBridge.logout()
+      this.onLogoutCallback(result)
+    },
+    onLogoutToIos: function () {
+      window.logoutCallback = this.onLogoutCallback
+      window.webkit.messageHandlers.logout.postMessage({})
+    },
+    onLogoutCallback: function (result) {
+      if (result) {
+        this.$store.commit('clearUsername')
+        alert('退出成功')
+      } else {
+        alert('操作失败，请重试')
+      }
     }
   }
 }

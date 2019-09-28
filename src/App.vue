@@ -19,9 +19,6 @@ export default {
       ]
     }
   },
-  created: function () {
-    window.nativeFunctionUserLogin = this.nativeFunctionUserLogin
-  },
   watch: {
     '$route' (to, from) {
       const routerType = to.params.routerType
@@ -36,6 +33,10 @@ export default {
         this.keepAliveNames = ['imooc']
       }
     }
+  },
+  created: function () {
+    this.$store.commit('setIsIphoneX', window.isIphoneX)
+    window.nativeFunctionUserLogin = this.nativeFunctionUserLogin
   },
   methods: {
     nativeFunctionUserLogin: function (username) {
